@@ -1,0 +1,40 @@
+<mxfile host="65bd71144e">
+    <diagram id="BnZYZ4l4G4ZfvRGZyphR" name="Page-1">
+        <mxGraphModel dx="1179" dy="711" grid="1" gridSize="15" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="33" value="" style="rounded=0;whiteSpace=wrap;html=1;fontSize=17;fontColor=#FFFFFF;arcSize=4;glass=0;shadow=0;" vertex="1" parent="1">
+                    <mxGeometry x="13" y="75" width="465" height="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;div style=&quot;font-size: 20px;&quot;&gt;&lt;span style=&quot;font-size: 20px;&quot;&gt;Streams info&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 20px;&quot;&gt;&lt;span style=&quot;font-size: 20px;&quot;&gt;Video/Audio&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 20px;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 20px;&quot;&gt;&lt;br style=&quot;font-size: 20px;&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 20px;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 20px;&quot;&gt;&lt;br style=&quot;font-size: 20px;&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 20px;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 20px;&quot;&gt;&lt;br style=&quot;font-size: 20px;&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 20px;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 20px;&quot;&gt;&lt;br style=&quot;font-size: 20px;&quot;&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=20;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="37.5" y="240" width="172.5" height="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Partnership&lt;br style=&quot;font-size: 24px;&quot;&gt;&lt;br style=&quot;font-size: 24px;&quot;&gt;&lt;br style=&quot;font-size: 24px;&quot;&gt;&lt;br style=&quot;font-size: 24px;&quot;&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=24;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="240" width="165" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Profile page: Desktop" style="rounded=0;whiteSpace=wrap;html=1;fontSize=15;" parent="1" vertex="1">
+                    <mxGeometry x="165" y="15" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 34px;&quot;&gt;Contact Information&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=28;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="28" y="90" width="435" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="rounded=0;whiteSpace=wrap;html=1;fontSize=15;fontColor=#FFFFFF;shadow=0;glass=0;" vertex="1" parent="1">
+                    <mxGeometry x="540" y="90" width="255" height="510" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="Profile page: Mobile" style="rounded=0;whiteSpace=wrap;html=1;fontSize=15;" vertex="1" parent="1">
+                    <mxGeometry x="577.5" y="15" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="&lt;div style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;background-color: initial; font-size: 15px;&quot;&gt;Contact Information&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=15;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="553.75" y="120" width="227.5" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="&lt;div style=&quot;font-size: 15px;&quot;&gt;&lt;div&gt;Streams info&lt;/div&gt;&lt;div&gt;Video/Audio&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=15;align=center;verticalAlign=middle;" vertex="1" parent="1">
+                    <mxGeometry x="553.75" y="255" width="226.25" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="Partnership" style="rounded=0;whiteSpace=wrap;html=1;fontSize=17;verticalAlign=middle;" vertex="1" parent="1">
+                    <mxGeometry x="555" y="390" width="225" height="120" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

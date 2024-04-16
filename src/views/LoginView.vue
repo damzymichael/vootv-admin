@@ -1,0 +1,59 @@
+<script setup lang="ts">
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+interface FormData {
+  email: string
+  password: string
+}
+const formData = reactive<FormData>({ email: '', password: '' })
+
+const handleSubmit = () => {
+  router.replace('/overview')
+}
+// const count = ref('Mike')
+</script>
+
+<template>
+  <div class="login flex flex-col items-center justify-center pt-3">
+    <header class="text-center">
+      <h1 class="text-3xl mb-1 font-extrabold">Voice of One TV</h1>
+      <h2 class="text-xl font-bold">Admin Dashboard</h2>
+    </header>
+
+    <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100 mt-[9vh]">
+      <h1 class="text-center mt-4 font-semibold text-2xl">Login</h1>
+      <form class="card-body" @submit.prevent="handleSubmit">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Email </span>
+          </label>
+          <input
+            type="email"
+            placeholder="Email"
+            class="input input-bordered"
+            required
+            v-model="formData.email"
+          />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Password </span>
+          </label>
+          <input
+            type="password"
+            placeholder="Password"
+            class="input input-bordered"
+            required
+            v-model="formData.password"
+          />
+        </div>
+        <div class="form-control mt-6">
+          <button class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
