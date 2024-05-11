@@ -166,7 +166,12 @@ import TimeIcon from '../components/svgs/TimeIcon.vue'
         <form class="card-body p-1 sm:p-4">
           <div class="form-control gap-4">
             <input type="text" class="input input-bordered" placeholder="Theme" required />
-            <input type="text" class="input input-bordered" placeholder="Venue" required />
+            <select class="select select-info w-full max-w-xs">
+              <option disabled selected>Select branch</option>
+              <option>RCN Lagos</option>
+              <option>RCN Akure</option>
+              <option>RCN Abuja</option>
+            </select>
             <input type="text" placeholder="Preacher" class="input input-bordered" required />
             <label class="input input-bordered flex items-center gap-2">
               Start time

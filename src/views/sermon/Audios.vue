@@ -1,52 +1,37 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { useAudioQuery, useAddAudio } from '@/utils/request'
+import { useToast } from 'vue-toast-notification'
+import Modal from '@/components/Modal.vue'
+import Button from '@/components/Button.vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import VueDatePicker from '@vuepic/vue-datepicker'
+import { audios } from '@/lib/index'
 
 const router = useRouter()
-
+const $toast = useToast()
 const dateValue = ref(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60_000))
 
-watch(dateValue, (newValue) => {
-  console.log(newValue)
-})
+// const { isPending, data, error } = useAudioQuery()
 
-// const picked = ref(new Date())
+const { mutateAsync, isPending: uploading } = useAddAudio()
 
-interface Audio {
-  title: string
-  preacher: string
-  duration: `${number} ${'min' | 'hr'}`
-  streams: number
-  downloads: number
-}
-
-const audios: Audio[] = [
-  {
-    title: 'Prayer Altar',
-    preacher: 'Apostle Arome Osayi',
-    duration: '54 min',
-    streams: 450,
-    downloads: 750
-  },
-  {
-    title: 'The Peace offering',
-    preacher: 'Apostle Arome Osayi',
-    duration: '2 hr',
-    streams: 700,
-    downloads: 1020
-  },
-  {
-    title: 'The meal offering',
-    preacher: 'Apostle Arome Osayi',
-    duration: '2 hr',
-    streams: 1040,
-    downloads: 567
+const handleSubmit = async (e: Event) => {
+  const formData = new FormData(e.currentTarget as HTMLFormElement)
+  for (const [, value] of formData.entries()) {
+    if (!value.toString().trim()) {
+      $toast.warning('Missing input')
+      return
+    }
   }
-]
+  try {
+    await mutateAsync(formData)
+    document.getElementById('closeModal')?.click()
+  } catch (error) {}
+}
 </script>
 
 <template>
+  <!-- <p class="mb-3 text-bold">Actual audio number: {{ data?.length }}</p> -->
   <header class="flex justify-between items-center mb-2">
     <h1 class="sm:text-lg font-semibold">Audio Sermons</h1>
     <button onclick="my_modal_2.showModal()" class="btn btn-xs sm:btn-sm md:btn-md" role="button">
@@ -82,24 +67,36 @@ const audios: Audio[] = [
       </tbody>
     </table>
   </div>
-  <dialog id="my_modal_2" class="modal">
-    <div class="modal-box h-[70vh]">
-      <h3 class="font-bold mb-8 text-lg text-center">Upload Audio</h3>
-      <form class="card-body p-1 sm:p-4">
-        <div class="form-control gap-4">
-          <input type="file" class="file-input input-bordered" accept=".mp3,audio/*" />
-          <input type="text" placeholder="Preacher" class="input input-bordered" required />
-          <!-- <VueDatePicker v-model="picked" /> -->
-          <input type="datetime-local" class="input input-bordered" v-model="dateValue" />
-        </div>
-        <div class="form-control mt-4">
-          <button class="btn btn-primary">Upload</button>
-        </div>
-      </form>
-      <p class="py-6 text-center">Press ESC key or click outside to close</p>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-      <button>close</button>
+
+  <Modal title="Upload Audio" id="my_modal_2">
+    <form class="card-body p-1 sm:p-4" @submit.prevent="handleSubmit">
+      <div class="form-control gap-4">
+        <input
+          type="text"
+          placeholder="Preacher"
+          class="input input-bordered"
+          required
+          name="title"
+        />
+        <input
+          type="text"
+          placeholder="Title"
+          class="input input-bordered"
+          required
+          name="preacher"
+        />
+        <input type="file" class="file-input input-bordered" accept=".mp3,audio/*" name="audio" />
+        <input
+          type="datetime-local"
+          class="input input-bordered"
+          v-model="dateValue"
+          name="timeRecorded"
+        />
+      </div>
+      <div class="form-control mt-4">
+        <button class="btn btn-primary">Upload</button>
+      </div>
     </form>
-  </dialog>
+    <button id="closeModal" onclick="my_modal_2.close()"></button>
+  </Modal>
 </template>
