@@ -60,7 +60,7 @@ const router = createRouter({
       meta: { title: 'Locations - VOOTV Admin' }
     },
     {
-      path: '/location/1',
+      path: '/location/:id',
       name: 'Location Details',
       component: LocationDetails,
       meta: { title: 'Location Details - VOOTV Admin' }

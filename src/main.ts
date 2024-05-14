@@ -2,7 +2,8 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import { VueQueryPlugin } from '@tanstack/vue-query'
+import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
+import type { VueQueryPluginOptions } from '@tanstack/vue-query'
 import Toast from 'vue-toastification'
 import type { PluginOptions } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
@@ -11,7 +12,11 @@ const app = createApp(App)
 
 app.use(router)
 
-app.use(VueQueryPlugin)
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
+
+const vueQueryOptions: VueQueryPluginOptions = { queryClient }
+
+app.use(VueQueryPlugin, vueQueryOptions)
 
 const options: PluginOptions = {
   maxToasts: 3,

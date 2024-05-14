@@ -11,3 +11,19 @@ export interface Audio<T = any, D = any> {
   streams: T[]
   downloads: D[]
 }
+
+export interface User {
+  id: string
+  fullName: string
+  email: string
+  phoneNumber: string
+  location?: { state: string }
+}
+
+export interface Location {
+  id: string
+  country: string
+  state: string
+  address: string
+  pastorInCharge: string
+}

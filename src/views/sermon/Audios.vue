@@ -3,7 +3,7 @@ import { useAudiosQuery, useAddAudio } from '@/utils/request'
 import { useToast } from 'vue-toastification'
 import Modal from '@/components/Modal.vue'
 import Button from '@/components/Button.vue'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -17,11 +17,13 @@ const { mutateAsync, isPending: uploading } = useAddAudio()
 const handleSubmit = async (e: Event) => {
   const form = e.currentTarget as HTMLFormElement
   const formData = new FormData(form)
-  for (const [, value] of formData.entries()) {
-    if (!value.toString().trim()) {
+  for (const [key, value] of formData.entries()) {
+    const trimmedValue = value.toString().trim()
+    if (!trimmedValue) {
       $toast.warning('Missing input')
       return
     }
+    if (typeof value != 'object') formData.set(key, trimmedValue)
   }
   await mutateAsync(formData)
   form.reset()
@@ -46,9 +48,7 @@ const handleSubmit = async (e: Event) => {
     </div>
     <div v-else>
       <div v-if="data && data.length < 1">
-        <p class="text-center font-semibold text-lg my-14">
-          No audio, click upload to add new audio
-        </p>
+        <p class="text-center font-semibold my-14">No audio, click upload to add new audio</p>
       </div>
       <div v-else>
         <table class="table min-w-[700px]">
@@ -58,9 +58,9 @@ const handleSubmit = async (e: Event) => {
               <th>Title</th>
               <th>Preacher</th>
               <th>Date</th>
-              <!-- <th>Duration</th> -->
-              <!-- <th>Streams</th> -->
-              <!-- <th>Downloads</th> -->
+              <th>Duration</th>
+              <th>Streams</th>
+              <th>Downloads</th>
             </tr>
           </thead>
           <tbody>
@@ -74,9 +74,9 @@ const handleSubmit = async (e: Event) => {
               <td>{{ audio.title }}</td>
               <td>{{ audio.preacher }}</td>
               <td>{{ new Date(audio.timeRecorded).toLocaleDateString() }}</td>
-              <!-- <td>{{ audio.duration }}</td> -->
-              <!-- <td>{{ audio.streams }}</td> -->
-              <!-- <td>{{ audio.downloads }}</td> -->
+              <td>{{ 'N/A' }}</td>
+              <td>{{ 'N/A' }}</td>
+              <td>{{ 'N/A' }}</td>
             </tr>
           </tbody>
         </table>
@@ -92,15 +92,9 @@ const handleSubmit = async (e: Event) => {
           placeholder="Preacher"
           class="input input-bordered"
           required
-          name="title"
-        />
-        <input
-          type="text"
-          placeholder="Title"
-          class="input input-bordered"
-          required
           name="preacher"
         />
+        <input type="text" placeholder="Title" class="input input-bordered" required name="title" />
         <input type="file" class="file-input input-bordered" accept=".mp3,audio/*" name="audio" />
         <input
           type="datetime-local"
