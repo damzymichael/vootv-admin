@@ -2,7 +2,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query'
+import { VueQueryPlugin, QueryClient, QueryCache, MutationCache } from '@tanstack/vue-query'
 import type { VueQueryPluginOptions } from '@tanstack/vue-query'
 import Toast from 'vue-toastification'
 import type { PluginOptions } from 'vue-toastification'
@@ -12,12 +12,6 @@ const app = createApp(App)
 
 app.use(router)
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
-
-const vueQueryOptions: VueQueryPluginOptions = { queryClient }
-
-app.use(VueQueryPlugin, vueQueryOptions)
-
 const options: PluginOptions = {
   maxToasts: 3,
   hideProgressBar: true,
@@ -26,5 +20,11 @@ const options: PluginOptions = {
 }
 
 app.use(Toast, options)
+
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+
+const vueQueryOptions: VueQueryPluginOptions = { queryClient }
+
+app.use(VueQueryPlugin, vueQueryOptions)
 
 app.mount('#app')

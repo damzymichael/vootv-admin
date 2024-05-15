@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import type { Login } from '@/types'
+import { useLogin } from '@/utils/request'
+import Button from '@/components/Button.vue'
 
-const router = useRouter()
+const { mutateAsync, isPending } = useLogin()
 
-interface FormData {
-  email: string
-  password: string
+const login = reactive<Login>({ email: '', password: '' })
+
+const handleSubmit = async () => {
+  for (const [key, value] of Object.entries(login)) {
+    const trimmedValue = value.toString().trim()
+    login[key as keyof typeof login] = trimmedValue
+  }
+  await mutateAsync(login)
 }
-const formData = reactive<FormData>({ email: '', password: '' })
-
-const handleSubmit = () => {
-  router.replace('/overview')
-}
-// const count = ref('Mike')
 </script>
 
 <template>
@@ -35,7 +36,7 @@ const handleSubmit = () => {
             placeholder="Email"
             class="input input-bordered"
             required
-            v-model="formData.email"
+            v-model="login.email"
           />
         </div>
         <div class="form-control">
@@ -47,11 +48,11 @@ const handleSubmit = () => {
             placeholder="Password"
             class="input input-bordered"
             required
-            v-model="formData.password"
+            v-model="login.password"
           />
         </div>
         <div class="form-control mt-6">
-          <button class="btn btn-primary">Login</button>
+          <Button class="btn btn-primary" :loading="isPending">Login</Button>
         </div>
       </form>
     </div>

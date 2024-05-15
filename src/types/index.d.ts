@@ -26,4 +26,17 @@ export interface Location {
   state: string
   address: string
   pastorInCharge: string
+  services?: Service[]
+}
+
+export interface Service {
+  day: string
+  theme: string
+  time: string
+  startTimes: string[]
+}
+
+export interface Login {
+  email: string
+  password: string
 }
