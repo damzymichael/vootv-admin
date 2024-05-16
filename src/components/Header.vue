@@ -3,9 +3,21 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { linkInfo } from '../lib'
 import MenuIcon from './svgs/MenuIcon.vue'
+import { useLogout } from '@/utils/request'
+import Button from './Button.vue'
 
 const showMobileNav = ref(false)
 const route = useRoute()
+const { mutate, isPending } = useLogout()
+
+watch(
+  () => route.path,
+  (newPath, oldPath) => {
+    if (newPath != oldPath && showMobileNav.value == true) {
+      showMobileNav.value = false
+    }
+  }
+)
 
 watch(showMobileNav, (currValue) => {
   document.body.style.overflowY = currValue ? 'hidden' : 'auto'
@@ -20,10 +32,17 @@ watch(showMobileNav, (currValue) => {
     <RouterLink to="/">
       <h1 class="font-extrabold text-2xl italic text-accent">VOO TV</h1>
     </RouterLink>
-    <nav class="sm:flex gap-3 hidden">
+    <nav class="sm:flex gap-3 hidden items-center">
       <RouterLink v-for="link in linkInfo" :to="link.link" class="link" active-class="link-neutral">
         {{ link.text }}
       </RouterLink>
+      <Button
+        @click="mutate"
+        :loading="isPending"
+        class="btn btn-outline btn-error w-max btn-sm ml-3"
+      >
+        Logout
+      </Button>
     </nav>
     <button class="inline-block sm:hidden" @click="showMobileNav = !showMobileNav">
       <MenuIcon />
@@ -45,6 +64,10 @@ watch(showMobileNav, (currValue) => {
             </RouterLink>
           </li>
         </ul>
+
+        <Button @click="mutate" :loading="isPending" class="btn btn-outline btn-error w-max btn-md">
+          Logout
+        </Button>
       </nav>
     </div>
   </Transition>

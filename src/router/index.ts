@@ -5,7 +5,8 @@ import Users from '@/views/users/Users.vue'
 import Profile from '@/views/users/Profile.vue'
 import Partners from '@/views/partners/Partners.vue'
 import PartnerInfo from '@/views/partners/PartnerInfo.vue'
-import Programs from '@/views/Programs.vue'
+import Programs from '@/views/program/Programs.vue'
+import AddProgram from '@/views/program/AddProgram.vue'
 import Locations from '@/views/location/Locations.vue'
 import LoginView from '@/views/LoginView.vue'
 import AudioDetails from '@/views/sermon/AudioDetails.vue'
@@ -14,6 +15,7 @@ import NotFound from '@/views/NotFound.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior: () => ({ top: 0 }),
   routes: [
     { path: '/', name: 'home', component: LoginView },
     {
@@ -52,6 +54,12 @@ const router = createRouter({
       name: 'programs',
       component: Programs,
       meta: { title: 'Programs - VOOTV Admin' }
+    },
+    {
+      path: '/programs/add-program',
+      name: 'add-program',
+      component: AddProgram,
+      meta: { title: 'Add Program - VOOTV Admin' }
     },
     {
       path: '/locations',

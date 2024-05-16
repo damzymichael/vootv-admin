@@ -40,3 +40,11 @@ export interface Login {
   email: string
   password: string
 }
+
+export interface Program {
+  type: 'PROGRAM' | 'EVENT'
+  startTIme: string
+  endTime: string
+  banner: { secure_url: string }
+  additionalInfo: string
+}

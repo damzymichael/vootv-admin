@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import axios from 'axios'
 import type { AxiosError, AxiosResponse } from 'axios'
-import type { Audio, User, Location, Service, Login } from '@/types'
+import type { Audio, User, Location, Service, Login, Program } from '@/types'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 
@@ -30,6 +30,22 @@ export function useLogin() {
     onSuccess: (data) => {
       $toast.success(data.data, { timeout: 4000 })
       router.replace('/overview')
+    },
+    onError: (error) => $toast.error(error.response?.data as string)
+  })
+}
+
+export function useLogout() {
+  const $toast = useToast()
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  return useMutation<AxiosResponse<string>, AxiosError<string>>({
+    mutationFn: () => instance.post('/user/logout'),
+    onSuccess: (data) => {
+      $toast.success(data.data, { timeout: 4000 })
+      queryClient.clear()
+      router.replace('/')
     },
     onError: (error) => $toast.error(error.response?.data as string)
   })
@@ -199,3 +215,35 @@ export function useAddService(id: string) {
     onError: (error) => errorHandler(error)
   })
 }
+//*Service requests
+
+//* Programs request
+export function useAddProgram() {
+  const router = useRouter()
+  const queryClient = useQueryClient()
+  const errorHandler = useError()
+  const $toast = useToast()
+
+  return useMutation<AxiosResponse<string>, AxiosError<string>, FormData>({
+    mutationFn: (formData) => instance.post('/program', formData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['programs'] })
+      $toast.success(data.data, { timeout: 4000 })
+      router.replace('/programs')
+    },
+    onError: (error) => errorHandler(error)
+  })
+}
+
+export function usePrograms() {
+  const errorHandler = useError()
+  return useQuery<Program[]>({
+    queryKey: ['programs'],
+    queryFn: async () => {
+      const { data } = await instance.get('/program')
+      return data
+    },
+    throwOnError: (error) => errorHandler(error)
+  })
+}
+//* Programs request

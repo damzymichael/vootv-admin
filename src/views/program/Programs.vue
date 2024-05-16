@@ -1,11 +1,25 @@
 <script setup lang="ts">
-import CalenderIcon from '../components/svgs/CalenderIcon.vue'
-import TimeIcon from '../components/svgs/TimeIcon.vue'
+import { useRouter } from 'vue-router'
+import CalenderIcon from '@/components/svgs/CalenderIcon.vue'
+import TimeIcon from '@/components/svgs/TimeIcon.vue'
+import { usePrograms } from '@/utils/request'
+
+const router = useRouter()
+
+const { data, isPending } = usePrograms()
 </script>
 
 <template>
   <div class="program">
-    <h1 class="text-2xl mb-4 font-semibold">Programs & Events</h1>
+    <header class="flex items-center justify-between mb-2">
+      <h1 class="text-2xl font-semibold">Programs & Events</h1>
+      <button
+        class="btn btn-sm sm:btn-md btn-outline btn-primary mt-3"
+        @click="router.push('/programs/add-program')"
+      >
+        Add Program
+      </button>
+    </header>
     <section>
       <div class="bg-base-200 rounded-md p-3 mb-3">
         <h2 class="mb-3 text-lg font-medium">Ongoing programs</h2>
@@ -32,13 +46,6 @@ import TimeIcon from '../components/svgs/TimeIcon.vue'
             <div class="flex gap-2 items-center"><TimeIcon /> <span>8AM & 4PM</span></div>
           </div>
         </div>
-
-        <button
-          class="btn btn-sm sm:btn-md btn-outline btn-primary mt-3"
-          onclick="my_modal_2.showModal()"
-        >
-          Add Program
-        </button>
       </div>
 
       <div class="bg-base-200 rounded-md p-3">
@@ -122,76 +129,9 @@ import TimeIcon from '../components/svgs/TimeIcon.vue'
             </p>
           </div>
         </div>
-
-        <button
-          class="btn btn-sm sm:btn-md btn-outline btn-primary mt-3"
-          onclick="my_modal_3.showModal()"
-        >
-          Add Event
-        </button>
       </div>
     </section>
-    <dialog id="my_modal_2" class="modal">
-      <div class="modal-box h-[70vh]">
-        <h3 class="font-bold mb-4 text-lg text-center">Add a program</h3>
-        <form class="card-body p-1 sm:p-4">
-          <div class="form-control gap-4">
-            <input type="text" class="input input-bordered" placeholder="Theme" required />
-            <input type="text" class="input input-bordered" placeholder="Venue" required />
-            <input type="text" placeholder="Preacher" class="input input-bordered" required />
-            <label class="input input-bordered flex items-center gap-2">
-              Start time
-              <input type="datetime-local" class="grow" />
-            </label>
 
-            <label class="input input-bordered flex items-center gap-2">
-              End time
-              <input type="datetime-local" class="grow" />
-            </label>
-          </div>
-          <div class="form-control mt-4">
-            <button class="btn btn-primary">Upload</button>
-          </div>
-        </form>
-        <p class="py-3 text-center">Press ESC key or click outside to close</p>
-      </div>
-      <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
-
-    <dialog id="my_modal_3" class="modal">
-      <div class="modal-box h-[70vh]">
-        <h3 class="font-bold mb-3 text-lg text-center">Add an Event</h3>
-        <form class="card-body p-1 sm:p-4">
-          <div class="form-control gap-4">
-            <input type="text" class="input input-bordered" placeholder="Theme" required />
-            <select class="select select-info w-full max-w-xs">
-              <option disabled selected>Select branch</option>
-              <option>RCN Lagos</option>
-              <option>RCN Akure</option>
-              <option>RCN Abuja</option>
-            </select>
-            <input type="text" placeholder="Preacher" class="input input-bordered" required />
-            <label class="input input-bordered flex items-center gap-2">
-              Start time
-              <input type="datetime-local" class="grow" />
-            </label>
-
-            <label class="input input-bordered flex items-center gap-2">
-              End time
-              <input type="datetime-local" class="grow" />
-            </label>
-          </div>
-          <div class="form-control mt-4">
-            <button class="btn btn-primary">Upload</button>
-          </div>
-        </form>
-        <p class="py-3 text-center">Press ESC key or click outside to close</p>
-      </div>
-      <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
+    <button class="btn btn-sm sm:btn-md btn-outline btn-primary mt-3">View all programs</button>
   </div>
 </template>
