@@ -45,8 +45,7 @@ const partners: Partner[] = [
 
 <template>
   <div class="partner">
-    <Toast />
-    <h1 class="text-2xl mb-4 font-semibold">Partners</h1>
+    <h1 class="text-2xl mb-4 font-semibold">Payments</h1>
     <div class="overflow-x-auto">
       <table class="table min-w-[700px]">
         <thead>
@@ -64,7 +63,7 @@ const partners: Partner[] = [
             v-for="(partner, index) in partners"
             :key="index"
             class="hover cursor-pointer"
-            @click="router.push('/partnership/1')"
+            @click="router.push('/payments/1')"
           >
             <th>{{ index + 1 }}</th>
             <td>{{ partner.name }}</td>

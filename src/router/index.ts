@@ -3,8 +3,8 @@ import HomeView from '@/views/HomeView.vue'
 import Sermon from '@/views/sermon/Sermons.vue'
 import Users from '@/views/users/Users.vue'
 import Profile from '@/views/users/Profile.vue'
-import Partners from '@/views/partners/Partners.vue'
-import PartnerInfo from '@/views/partners/PartnerInfo.vue'
+import Payments from '@/views/payments/Payments.vue'
+import PaymentInfo from '@/views/payments/PaymentInfo.vue'
 import Programs from '@/views/program/Programs.vue'
 import AddProgram from '@/views/program/AddProgram.vue'
 import Locations from '@/views/location/Locations.vue'
@@ -38,15 +38,15 @@ const router = createRouter({
       meta: { title: 'Profile - VOOTV Admin' }
     },
     {
-      path: '/partnership',
-      name: 'partnership',
-      component: Partners,
+      path: '/payments',
+      name: 'payments',
+      component: Payments,
       meta: { title: 'Partners - VOOTV Admin' }
     },
     {
-      path: '/partnership/:id',
-      name: 'Partner',
-      component: PartnerInfo,
+      path: '/payments/:id',
+      name: 'payment',
+      component: PaymentInfo,
       meta: { title: 'Partners Info - VOOTV Admin' }
     },
     {

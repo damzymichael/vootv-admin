@@ -34,7 +34,7 @@ const { data, isPending, isError } = usePrograms()
         <!-- Ongoing programs  -->
         <h2 class="mb-3 text-lg font-medium">Ongoing programs</h2>
         <div
-          class="flex items-start gap-2 mb-4"
+          class="flex flex-wrap items-start gap-2 mb-4"
           v-for="program in data?.filter(
             (program) =>
               program.type == 'PROGRAM' &&
@@ -62,7 +62,7 @@ const { data, isPending, isError } = usePrograms()
       <div class="bg-base-200 mb-3 rounded-md p-3">
         <h2 class="mb-3 text-lg font-medium">Upcoming Programs</h2>
         <div
-          class="flex gap-2 mb-4"
+          class="flex flex-wrap gap-2 mb-4"
           v-for="program in data?.filter(
             (program) => program.type == 'PROGRAM' && new Date(program.startTime) > new Date()
           )"
@@ -86,7 +86,7 @@ const { data, isPending, isError } = usePrograms()
       <div class="bg-base-200 rounded-md p-3">
         <h2 class="mb-3 text-lg font-medium">Upcoming Events at our centers</h2>
         <div
-          class="flex items-center gap-2 mb-4"
+          class="flex flex-wrap items-center gap-2 mb-4"
           v-for="program in data?.filter(
             (program) => program.type == 'EVENT' && new Date(program.startTime) > new Date()
           )"

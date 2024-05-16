@@ -5,7 +5,10 @@ import type { Audio, User, Location, Service, Login, Program } from '@/types'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 
-const instance = axios.create({ baseURL: import.meta.env.VITE_API_URL, withCredentials: true })
+export const instance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true
+})
 
 const useError = () => {
   const $toast = useToast()
@@ -19,6 +22,21 @@ const useError = () => {
     $toast.error(error.response?.data || error.message)
     return false
   }
+}
+
+// Todo Cache authentication request
+//* User requests
+export function useUsers() {
+  const errorHandler = useError()
+
+  return useQuery<User[]>({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const { data } = await instance.get('/user')
+      return data
+    },
+    throwOnError: (error) => errorHandler(error)
+  })
 }
 
 export function useLogin() {
@@ -50,6 +68,20 @@ export function useLogout() {
     onError: (error) => $toast.error(error.response?.data as string)
   })
 }
+
+export function useUser(id: string) {
+  const errorHandler = useError()
+
+  return useQuery<User>({
+    queryKey: ['users', id],
+    queryFn: async () => {
+      const { data } = await instance.get('/user/' + id)
+      return data
+    },
+    throwOnError: (error) => errorHandler(error)
+  })
+}
+//* User requests
 
 //* Audio Requests
 export function useAudiosQuery() {
@@ -111,34 +143,6 @@ export function useDeleteAudio(id: string) {
   })
 }
 //* Audio Requests
-
-//* User requests
-export function useUsers() {
-  const errorHandler = useError()
-
-  return useQuery<User[]>({
-    queryKey: ['users'],
-    queryFn: async () => {
-      const { data } = await instance.get('/user')
-      return data
-    },
-    throwOnError: (error) => errorHandler(error)
-  })
-}
-
-export function useUser(id: string) {
-  const errorHandler = useError()
-
-  return useQuery<User>({
-    queryKey: ['users', id],
-    queryFn: async () => {
-      const { data } = await instance.get('/user/' + id)
-      return data
-    },
-    throwOnError: (error) => errorHandler(error)
-  })
-}
-//* User requests
 
 //* Location requests
 type LocationBody = Omit<Location, 'id'>
