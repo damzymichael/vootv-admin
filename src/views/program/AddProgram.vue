@@ -22,11 +22,12 @@ const handleSubmit = async (e: Event) => {
   }
   if (locationId.value) formData.set('locationId', locationId.value)
   await mutateAsync(formData)
+  form.reset()
 }
 </script>
 <template>
   <div class="px-auto">
-    <h1 class="font-bold mb-4 text-lg text-center">Add Program</h1>
+    <h1 class="font-bold mb-2 text-lg text-center">Add Program</h1>
     <form
       class="card-body mx-auto p-1 sm:p-4 w-full sm:w-4/5 md:w-3/5"
       @submit.prevent="handleSubmit"

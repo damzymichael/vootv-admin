@@ -42,9 +42,11 @@ export interface Login {
 }
 
 export interface Program {
+  theme: string
   type: 'PROGRAM' | 'EVENT'
-  startTIme: string
-  endTime: string
+  startTime: Date
+  endTime: Date
   banner: { secure_url: string }
   additionalInfo: string
+  location: Pick<Location, 'country' | 'state'>
 }

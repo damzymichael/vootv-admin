@@ -6,7 +6,7 @@ import { usePrograms } from '@/utils/request'
 
 const router = useRouter()
 
-const { data, isPending } = usePrograms()
+const { data, isPending, isError } = usePrograms()
 </script>
 
 <template>
@@ -20,26 +20,60 @@ const { data, isPending } = usePrograms()
         Add Program
       </button>
     </header>
-    <section>
+    <div v-if="isPending" class="flex gap-3 flex-col items-center justify-center h-32">
+      <span class="loading loading-ring loading-lg mt-10"></span>
+      Fetching Programs
+    </div>
+
+    <div v-else-if="isError">
+      <p>Error occured while fetching</p>
+    </div>
+
+    <section v-else>
       <div class="bg-base-200 rounded-md p-3 mb-3">
+        <!-- Ongoing programs  -->
         <h2 class="mb-3 text-lg font-medium">Ongoing programs</h2>
-        <div class="flex gap-2">
-          <div class="w-1/5 bg-current h-24 rounded-lg"></div>
+        <div
+          class="flex items-start gap-2 mb-4"
+          v-for="program in data?.filter(
+            (program) =>
+              program.type == 'PROGRAM' &&
+              new Date(program.startTime) < new Date() &&
+              new Date(program.endTime) > new Date()
+          )"
+        >
+          <img
+            :src="program.banner.secure_url"
+            alt="program-banner"
+            class="w-full sm:w-1/5 aspect-video object-cover rounded-2xl"
+          />
           <div>
-            <h3 class="mb-2">Festival of glory</h3>
+            <h3 class="mb-2 font-bold text-lg">{{ program.theme }}</h3>
             <div class="badge badge-error rounded-none mb-2">LIVE</div>
             <div class="flex gap-2 items-center">
-              <CalenderIcon /> <span>End Date: 24/7/24</span>
+              <CalenderIcon />
+              <span>Ends: {{ new Date(program.endTime).toLocaleDateString() }}</span>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Upcoming programs  -->
       <div class="bg-base-200 mb-3 rounded-md p-3">
         <h2 class="mb-3 text-lg font-medium">Upcoming Programs</h2>
-        <div class="flex gap-2">
-          <div class="w-1/5 bg-current h-24 rounded-lg"></div>
+        <div
+          class="flex gap-2 mb-4"
+          v-for="program in data?.filter(
+            (program) => program.type == 'PROGRAM' && new Date(program.startTime) > new Date()
+          )"
+        >
+          <img
+            :src="program.banner.secure_url"
+            alt="program-banner"
+            class="w-full sm:w-1/5 aspect-video object-cover rounded-2xl"
+          />
           <div>
-            <h3 class="mb-1">Festival of glory</h3>
+            <h3 class="mb-1 font-bold text-lg">{{ program.theme }}</h3>
             <div class="flex gap-2 mb-1 items-center">
               <CalenderIcon /> <span>24th - 26th Dec, 2024</span>
             </div>
@@ -48,12 +82,22 @@ const { data, isPending } = usePrograms()
         </div>
       </div>
 
+      <!-- Upcoming events  -->
       <div class="bg-base-200 rounded-md p-3">
         <h2 class="mb-3 text-lg font-medium">Upcoming Events at our centers</h2>
-        <div class="flex items-center gap-2 mb-4">
-          <div class="w-1/5 bg-current h-24 rounded-lg"></div>
+        <div
+          class="flex items-center gap-2 mb-4"
+          v-for="program in data?.filter(
+            (program) => program.type == 'EVENT' && new Date(program.startTime) > new Date()
+          )"
+        >
+          <img
+            :src="program.banner.secure_url"
+            alt="program-banner"
+            class="w-full sm:w-1/5 aspect-video object-cover rounded-2xl"
+          />
           <div>
-            <h3 class="mb-1">Festival of glory</h3>
+            <h3 class="mb-1 font-bold text-lg">{{ program.theme }}</h3>
             <div class="flex gap-2 mb-1 items-center">
               <CalenderIcon /> <span>24th - 26th Dec, 2024</span>
             </div>
@@ -85,53 +129,12 @@ const { data, isPending } = usePrograms()
                   ></path>
                 </g>
               </svg>
-              <span> RCN Akure</span>
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <div class="w-1/5 bg-current h-24 rounded-lg"></div>
-          <div>
-            <h3 class="mb-1">Festival of glory</h3>
-            <div class="flex gap-2 mb-1 items-center">
-              <CalenderIcon /> <span>24th - 26th Dec, 2024</span>
-            </div>
-            <div class="flex gap-2 items-center"><TimeIcon /> <span>8AM & 4PM</span></div>
-            <p class="flex items-center gap-2">
-              <svg
-                width="20px"
-                height="20px"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    d="M12 21C15.5 17.4 19 14.1764 19 10.2C19 6.22355 15.866 3 12 3C8.13401 3 5 6.22355 5 10.2C5 14.1764 8.5 17.4 12 21Z"
-                    class="stroke-current"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                  <path
-                    d="M12 12C13.1046 12 14 11.1046 14 10C14 8.89543 13.1046 8 12 8C10.8954 8 10 8.89543 10 10C10 11.1046 10.8954 12 12 12Z"
-                    class="stroke-current"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </g>
-              </svg>
-              <span> RCN Lagos</span>
+              <span> RCN {{ program.location.state }}</span>
             </p>
           </div>
         </div>
       </div>
+      <button class="btn btn-sm sm:btn-md btn-outline btn-primary mt-3">View all programs</button>
     </section>
-
-    <button class="btn btn-sm sm:btn-md btn-outline btn-primary mt-3">View all programs</button>
   </div>
 </template>

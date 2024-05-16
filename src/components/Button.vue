@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ReservedProps , ButtonHTMLAttributes} from 'vue'
 defineProps<{ loading?: boolean; class: string }>()
 defineEmits<{ click: [] }>()
 </script>
