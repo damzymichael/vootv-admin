@@ -8,6 +8,13 @@ import YoutubeIcon from '@/components/svgs/YoutubeIcon.vue'
 import PartnerIcon from '@/components/svgs/PartnerIcon.vue'
 import IncomeIcon from '@/components/svgs/IncomeIcon.vue'
 import LocationIcon from '@/components/svgs/LocationIcon.vue'
+import { useUsers, useAudiosQuery, useLocations } from '@/utils/request'
+
+const { data: users } = useUsers()
+
+const { data: audios } = useAudiosQuery()
+
+const { data: locations } = useAudiosQuery()
 
 const statisticalData: { description: string; stat: number }[] = [
   { description: 'Total Users', stat: 3000 },
@@ -30,18 +37,18 @@ const statisticalData: { description: string; stat: number }[] = [
           <UsersIcon />
         </div>
         <div class="stat-title">Users</div>
-        <div class="stat-value">4,200</div>
-        <div class="stat-desc">↗︎ 400 (22%)</div>
+        <div class="stat-value">{{ users?.length || 'N/A' }}</div>
+        <!-- <div class="stat-desc">↗︎ 400 (22%)</div> -->
       </div>
 
-      <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
+      <!-- <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
         <div class="stat-figure text-secondary">
           <RegisterIcon />
         </div>
         <div class="stat-title">New Registers</div>
         <div class="stat-value">200</div>
         <div class="stat-desc">↘︎ 90 (14%)</div>
-      </div>
+      </div> -->
 
       <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
         <div class="stat-figure text-secondary">
@@ -67,8 +74,8 @@ const statisticalData: { description: string; stat: number }[] = [
           <AudioIcon />
         </div>
         <div class="stat-title">Audios</div>
-        <div class="stat-value">500</div>
-        <div class="stat-desc">+3 last week</div>
+        <div class="stat-value">{{ audios?.length || 'N/A' }}</div>
+        <!-- <div class="stat-desc">+3 last week</div> -->
       </div>
 
       <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
@@ -104,8 +111,8 @@ const statisticalData: { description: string; stat: number }[] = [
         </div>
         <div class="stat-title">Locations</div>
         <!-- Smaller text here  -->
-        <div class="stat-value text-3xl">30</div>
-        <div class="stat-desc">+10 last year</div>
+        <div class="stat-value text-3xl">{{ locations?.length  || 'N/A' }}</div>
+        <!-- <div class="stat-desc">+10 last year</div> -->
       </div>
     </div>
   </div>

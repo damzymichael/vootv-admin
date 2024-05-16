@@ -39,7 +39,7 @@ watch(showMobileNav, (currValue) => {
       <Button
         @click="mutate"
         :loading="isPending"
-        class="btn btn-outline btn-error w-max btn-sm ml-3"
+        class="btn btn-outline btn-error w-max btn-sm ml-4"
       >
         Logout
       </Button>
@@ -65,7 +65,11 @@ watch(showMobileNav, (currValue) => {
           </li>
         </ul>
 
-        <Button @click="mutate" :loading="isPending" class="btn btn-outline btn-error w-max btn-md">
+        <Button
+          @click="mutate"
+          :loading="isPending"
+          class="btn btn-outline btn-error w-max btn-md mt-4"
+        >
           Logout
         </Button>
       </nav>
