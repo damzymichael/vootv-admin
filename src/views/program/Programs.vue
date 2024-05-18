@@ -3,10 +3,22 @@ import { useRouter } from 'vue-router'
 import CalenderIcon from '@/components/svgs/CalenderIcon.vue'
 import TimeIcon from '@/components/svgs/TimeIcon.vue'
 import { usePrograms } from '@/utils/request'
+import { formatDay, formatDate } from '@/utils/UI'
+import Modal from '@/components/Modal.vue'
+import Button from '@/components/Button.vue'
 
 const router = useRouter()
 
 const { data, isPending, isError } = usePrograms()
+
+const displayTimeframe = (start: Date, end: Date) => {
+  const startDate = new Date(start)
+  const endDate = new Date(end)
+
+  return startDate.getMonth() == endDate.getMonth()
+    ? `${formatDay(startDate)} - ${formatDate(endDate)}`
+    : `${formatDate(startDate)} - ${formatDate(endDate)}`
+}
 </script>
 
 <template>
@@ -52,7 +64,7 @@ const { data, isPending, isError } = usePrograms()
             <div class="badge badge-error rounded-none mb-2">LIVE</div>
             <div class="flex gap-2 items-center">
               <CalenderIcon />
-              <span>Ends: {{ new Date(program.endTime).toLocaleDateString() }}</span>
+              <span>Ends: {{ new Date(program.endTime).toDateString() }}</span>
             </div>
           </div>
         </div>
@@ -75,9 +87,16 @@ const { data, isPending, isError } = usePrograms()
           <div>
             <h3 class="mb-1 font-bold text-lg">{{ program.theme }}</h3>
             <div class="flex gap-2 mb-1 items-center">
-              <CalenderIcon /> <span>24th - 26th Dec, 2024</span>
+              <CalenderIcon />
+              <span>{{ displayTimeframe(program.startTime, program.endTime) }}</span>
             </div>
             <div class="flex gap-2 items-center"><TimeIcon /> <span>8AM & 4PM</span></div>
+          </div>
+          <div class="w-full flex gap-2">
+            <button class="btn btn-outline btn-primary" onclick="delete_modal.showModal()">
+              Edit
+            </button>
+            <button class="btn btn-outline btn-error">Delete</button>
           </div>
         </div>
       </div>
@@ -99,7 +118,8 @@ const { data, isPending, isError } = usePrograms()
           <div>
             <h3 class="mb-1 font-bold text-lg">{{ program.theme }}</h3>
             <div class="flex gap-2 mb-1 items-center">
-              <CalenderIcon /> <span>24th - 26th Dec, 2024</span>
+              <CalenderIcon />
+              <span>{{ displayTimeframe(program.startTime, program.endTime) }}</span>
             </div>
             <div class="flex gap-2 items-center"><TimeIcon /> <span>8AM & 4PM</span></div>
             <p class="flex items-center gap-2">
@@ -132,9 +152,26 @@ const { data, isPending, isError } = usePrograms()
               <span> RCN {{ program.location.state }}</span>
             </p>
           </div>
+          <div class="w-full flex gap-2">
+            <button class="btn btn-outline btn-primary" onclick="delete_modal.showModal()">
+              Edit
+            </button>
+            <button class="btn btn-outline btn-error">Delete</button>
+          </div>
         </div>
       </div>
       <button class="btn btn-sm sm:btn-md btn-outline btn-primary mt-3">View all programs</button>
     </section>
+
+    <!-- Delete Confirmation modal  -->
+    <Modal id="delete_modal" title="Are you sure you want to delete">
+      <div class="flex gap-4 justify-center">
+        <button class="btn btn-neutral btn-sm mb-3" onclick="delete_modal.close()">Close</button>
+        <Button class="btn btn-error btn-sm mb-3"> Delete </Button>
+      </div>
+    </Modal>
+
+    <!-- Edit Confirmation modal  -->
+    <Modal id="edit_modal" title="Edit program"> </Modal>
   </div>
 </template>

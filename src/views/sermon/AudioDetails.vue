@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import Button from '@/components/Button.vue'
 import Modal from '@/components/Modal.vue'
 import { useAudioQuery, useDeleteAudio } from '@/utils/request'
@@ -12,17 +13,11 @@ const { data, isPending, error } = useAudioQuery(audioId)
 
 const { isPending: deleting, mutate } = useDeleteAudio(audioId)
 
-interface Stream {
-  user: string
-  time: Date
-  completed: boolean
+function formatTime(minutes: number) {
+  const hours = Math.floor(minutes / 60)
+  const remainingMinutes = minutes % 60
+  return `${hours}:${remainingMinutes < 10 ? '0' : ''}${remainingMinutes}`
 }
-
-const streams: Stream[] = [
-  { user: 'Dan Charles', time: new Date(), completed: true },
-  { user: 'Dan Charles', time: new Date('2023-12-10, 22:20'), completed: false },
-  { user: 'Dan Charles', time: new Date(), completed: true }
-]
 </script>
 
 <template>
@@ -48,8 +43,12 @@ const streams: Stream[] = [
           <p className="text-sm mb-2">
             <span className="font-bold">Preacher:</span> {{ data?.preacher }}
           </p>
-          <p className="text-sm mb-2"><span className="font-bold">Streams:</span> N/A</p>
-          <p className="text-sm mb-2"><span className="font-bold">Downloads:</span> N/A</p>
+          <p className="text-sm mb-2">
+            <span className="font-bold">Streams:</span> {{ data?.streams.length }}
+          </p>
+          <p className="text-sm mb-2">
+            <span className="font-bold">Downloads:</span> {{ data?.downloads.length }}
+          </p>
         </div>
 
         <button class="btn btn-error btn-sm mb-3" onclick="my_modal_2.showModal()">Delete</button>
@@ -69,22 +68,23 @@ const streams: Stream[] = [
           <div class="overflow-x-auto md:w-[48%]">
             <h2 class="font-semibold mb-2 text-lg">Streams</h2>
             <div class="overflow-x-auto border border-gray-300 rounded-xl mb-4">
-              <table class="table min-w-[450px]">
+              <table class="table min-w-[450px]" v-if="data && data.streams.length > 0">
                 <thead class="bg-neutral">
                   <tr>
                     <th>User</th>
                     <th>Date</th>
-                    <th>Completed</th>
+                    <th>Duration</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(stream, index) in streams" :key="index" class="hover cursor-pointer">
-                    <td>{{ stream.user }}</td>
-                    <td>{{ stream.time.toLocaleString() }}</td>
-                    <td>{{ stream.completed }}</td>
+                  <tr v-for="stream in data.streams" :key="stream.id" class="hover cursor-pointer">
+                    <td>{{ stream.user.fullName }}</td>
+                    <td>{{ new Date(stream.createdAt).toDateString() }}</td>
+                    <td class="tracking-widest">{{ formatTime(stream.duration) }}</td>
                   </tr>
                 </tbody>
               </table>
+              <p v-else>No streams yet</p>
               <button class="btn btn-primary btn-sm mb-2 ml-2">View more</button>
             </div>
           </div>
@@ -92,22 +92,28 @@ const streams: Stream[] = [
           <div class="overflow-x-auto md:w-[48%]">
             <h2 class="font-semibold mb-2 text-lg">Downloads</h2>
             <div class="overflow-x-auto border border-gray-300 rounded-xl mb-4">
-              <table class="table min-w-[450px]">
+              <table class="table min-w-[450px]" v-if="data && data.downloads.length > 0">
                 <thead class="bg-neutral">
                   <tr>
                     <th>User</th>
                     <th>Date</th>
-                    <th>Completed</th>
+                    <th>status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(stream, index) in streams" :key="index" class="hover cursor-pointer">
-                    <td>{{ stream.user }}</td>
-                    <td>{{ stream.time.toLocaleString() }}</td>
-                    <td>{{ stream.completed }}</td>
+                  <tr
+                    v-for="download in data?.downloads"
+                    :key="download.id"
+                    class="hover cursor-pointer"
+                  >
+                    <td>{{ download.user.fullName }}</td>
+                    <td>{{ new Date(download.createdAt).toDateString() }}</td>
+                    <td>{{ download.status.toString().toLowerCase() }}</td>
                   </tr>
                 </tbody>
               </table>
+              <p v-else>No streams yet</p>
+
               <button class="btn btn-primary btn-sm mb-2 ml-2">View more</button>
             </div>
           </div>

@@ -20,7 +20,7 @@ const { data, isPending, error } = useUsers()
       </div>
       <div v-else>
         <div v-if="data && data.length < 1">
-          <p class="text-center font-semibold text-lg my-14">No users has signed up</p>
+          <p class="text-center font-semibold text-lg my-14">No user has signed up</p>
         </div>
         <div v-else>
           <table class="table min-w-[700px]">

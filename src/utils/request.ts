@@ -112,10 +112,18 @@ export const useAddAudio = () => {
   })
 }
 
+enum Status {
+  COMPLETED,
+  ONGOING,
+  FAILED
+}
+type Stream = { id: string; user: { fullName: string }; createdAt: Date; duration: number }
+type Download = { id: string; user: { fullName: string }; createdAt: Date; status: Status }
+
 export function useAudioQuery(id: string) {
   const errorHandler = useError()
 
-  return useQuery<Audio>({
+  return useQuery<Audio<Stream, Download>>({
     queryKey: ['audios', id],
     queryFn: async () => {
       const { data } = await instance.get('/audio/' + id)
@@ -249,5 +257,11 @@ export function usePrograms() {
     },
     throwOnError: (error) => errorHandler(error)
   })
+}
+
+export function useDeleteProgram() {
+  const errorHandler = useError()
+
+  return useMutation({})
 }
 //* Programs request

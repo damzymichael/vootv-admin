@@ -75,8 +75,8 @@ const handleSubmit = async (e: Event) => {
               <td>{{ audio.preacher }}</td>
               <td>{{ new Date(audio.timeRecorded).toLocaleDateString() }}</td>
               <td>{{ 'N/A' }}</td>
-              <td>{{ 'N/A' }}</td>
-              <td>{{ 'N/A' }}</td>
+              <td>{{ audio.streams.length }}</td>
+              <td>{{ audio.downloads.length }}</td>
             </tr>
           </tbody>
         </table>

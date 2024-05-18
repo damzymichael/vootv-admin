@@ -8,23 +8,30 @@ import YoutubeIcon from '@/components/svgs/YoutubeIcon.vue'
 import PartnerIcon from '@/components/svgs/PartnerIcon.vue'
 import IncomeIcon from '@/components/svgs/IncomeIcon.vue'
 import LocationIcon from '@/components/svgs/LocationIcon.vue'
+import type { Audio } from '@/types'
 import { useUsers, useAudiosQuery, useLocations } from '@/utils/request'
 
 const { data: users } = useUsers()
 
 const { data: audios } = useAudiosQuery()
 
-const { data: locations } = useAudiosQuery()
+const { data: locations } = useLocations()
 
-const statisticalData: { description: string; stat: number }[] = [
-  { description: 'Total Users', stat: 3000 },
-  { description: 'Partners', stat: 400 },
-  { description: 'Income', stat: 500000 },
-  { description: 'Videos', stat: 3000 },
-  { description: 'Audios', stat: 7000 },
-  { description: 'Downloads', stat: 5000 },
-  { description: 'Locations', stat: 50 }
-]
+const getAllStreams = (audios: Audio[]) => {
+  let streams: { id: string }[] = []
+  audios.forEach((audio) => {
+    streams = [...streams, ...audio.streams]
+  })
+  return streams
+}
+
+const getAllDownloads = (audios: Audio[]) => {
+  let downloads: { id: string }[] = []
+  audios.forEach((audio) => {
+    downloads = [...downloads, ...audio.downloads]
+  })
+  return downloads
+}
 </script>
 
 <template>
@@ -37,7 +44,7 @@ const statisticalData: { description: string; stat: number }[] = [
           <UsersIcon />
         </div>
         <div class="stat-title">Users</div>
-        <div class="stat-value">{{ users?.length || 'N/A' }}</div>
+        <div class="stat-value">{{ users ? users.length : 'N/A' }}</div>
         <!-- <div class="stat-desc">↗︎ 400 (22%)</div> -->
       </div>
 
@@ -55,8 +62,8 @@ const statisticalData: { description: string; stat: number }[] = [
           <PartnerIcon />
         </div>
         <div class="stat-title">Partners</div>
-        <div class="stat-value">1200</div>
-        <div class="stat-desc">+200 last month</div>
+        <div class="stat-value">{{ 'N/A' }}</div>
+        <!-- <div class="stat-desc">+200 last month</div> -->
       </div>
 
       <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
@@ -65,8 +72,8 @@ const statisticalData: { description: string; stat: number }[] = [
         </div>
         <div class="stat-title">Income</div>
         <!-- Smaller text here  -->
-        <div class="stat-value text-3xl">N 1,500,000</div>
-        <div class="stat-desc">↗︎100,000 (14%)</div>
+        <div class="stat-value text-3xl">{{ 'N/A' }}</div>
+        <!-- <div class="stat-desc">↗︎100,000 (14%)</div> -->
       </div>
 
       <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
@@ -74,7 +81,7 @@ const statisticalData: { description: string; stat: number }[] = [
           <AudioIcon />
         </div>
         <div class="stat-title">Audios</div>
-        <div class="stat-value">{{ audios?.length || 'N/A' }}</div>
+        <div class="stat-value">{{ audios ? audios.length : 'N/A' }}</div>
         <!-- <div class="stat-desc">+3 last week</div> -->
       </div>
 
@@ -83,8 +90,8 @@ const statisticalData: { description: string; stat: number }[] = [
           <YoutubeIcon />
         </div>
         <div class="stat-title">Videos</div>
-        <div class="stat-value">300</div>
-        <div class="stat-desc">+5 last month</div>
+        <div class="stat-value">{{ 'N/A' }}</div>
+        <!-- <div class="stat-desc">+5 last month</div> -->
       </div>
 
       <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
@@ -92,8 +99,8 @@ const statisticalData: { description: string; stat: number }[] = [
           <StreamsIcon />
         </div>
         <div class="stat-title">Streams</div>
-        <div class="stat-value">450,000</div>
-        <div class="stat-desc">↗︎100,000 (14%)</div>
+        <div class="stat-value">{{ audios ? getAllStreams(audios).length : 'N/A' }}</div>
+        <!-- <div class="stat-desc">↗︎100,000 (14%)</div> -->
       </div>
 
       <div class="stat sm:w-1/2 md:w-1/4">
@@ -101,8 +108,8 @@ const statisticalData: { description: string; stat: number }[] = [
           <DownloadIcon />
         </div>
         <div class="stat-title">Downloads</div>
-        <div class="stat-value">31K</div>
-        <div class="stat-desc">Jan 1st - Feb 1st</div>
+        <div class="stat-value">{{ audios ? getAllDownloads(audios).length : 'N/A' }}</div>
+        <!-- <div class="stat-desc">Jan 1st - Feb 1st</div> -->
       </div>
 
       <div class="stat sm:w-1/2 md:w-1/3 lg:w-1/4">
@@ -111,7 +118,7 @@ const statisticalData: { description: string; stat: number }[] = [
         </div>
         <div class="stat-title">Locations</div>
         <!-- Smaller text here  -->
-        <div class="stat-value text-3xl">{{ locations?.length  || 'N/A' }}</div>
+        <div class="stat-value text-3xl">{{ locations ? locations.length : 'N/A' }}</div>
         <!-- <div class="stat-desc">+10 last year</div> -->
       </div>
     </div>

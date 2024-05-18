@@ -1,4 +1,6 @@
-export interface Audio<T = any, D = any> {
+type ID = { id: string }
+
+export interface Audio<S = ID, D = ID> {
   id: string
   title: string
   link: string
@@ -8,7 +10,7 @@ export interface Audio<T = any, D = any> {
   preacher: string
   createdAt: Date
   updatedAt: Date
-  streams: T[]
+  streams: S[]
   downloads: D[]
 }
 
