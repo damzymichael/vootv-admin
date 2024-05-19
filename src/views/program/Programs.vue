@@ -6,10 +6,40 @@ import { usePrograms } from '@/utils/request'
 import { formatDay, formatDate } from '@/utils/UI'
 import Modal from '@/components/Modal.vue'
 import Button from '@/components/Button.vue'
+import { ref, reactive, watch } from 'vue'
+import { useDeleteProgram, useLocations } from '@/utils/request'
+import type { Program } from '@/types'
 
 const router = useRouter()
 
 const { data, isPending, isError } = usePrograms()
+
+const { data: locations } = useLocations()
+
+const deleteId = ref<string>('')
+
+const { mutateAsync, isPending: deleting } = useDeleteProgram()
+
+const currentProgram = ref<Program | undefined>(undefined)
+
+const program = reactive({
+  theme: '',
+  startTime: new Date().toISOString().slice(0, 16),
+  endTime: new Date().toISOString().slice(0, 16),
+  venue: '',
+  additionalInfo: ''
+})
+
+watch(currentProgram, () => {
+  if (currentProgram.value) {
+    const { theme, startTime, endTime, additionalInfo, venue } = currentProgram.value
+    program.theme = theme
+    program.startTime = new Date(startTime).toISOString().slice(0, 16)
+    program.endTime = new Date(endTime).toISOString().slice(0, 16)
+    program.additionalInfo = additionalInfo
+    program.venue = venue
+  }
+})
 
 const displayTimeframe = (start: Date, end: Date) => {
   const startDate = new Date(start)
@@ -19,6 +49,16 @@ const displayTimeframe = (start: Date, end: Date) => {
     ? `${formatDay(startDate)} - ${formatDate(endDate)}`
     : `${formatDate(startDate)} - ${formatDate(endDate)}`
 }
+
+const handleSubmit = async () => {}
+
+const deleteProgram = async (id: string) => {
+  await mutateAsync(id)
+  document.getElementById('close_delete')?.click()
+}
+
+// @change="locationId = locations?.find((location) => location.address == program.venue)?.id as string"
+
 </script>
 
 <template>
@@ -42,8 +82,8 @@ const displayTimeframe = (start: Date, end: Date) => {
     </div>
 
     <section v-else>
+      <!-- Ongoing programs  -->
       <div class="bg-base-200 rounded-md p-3 mb-3">
-        <!-- Ongoing programs  -->
         <h2 class="mb-3 text-lg font-medium">Ongoing programs</h2>
         <div
           class="flex flex-wrap items-start gap-2 mb-4"
@@ -93,10 +133,20 @@ const displayTimeframe = (start: Date, end: Date) => {
             <div class="flex gap-2 items-center"><TimeIcon /> <span>8AM & 4PM</span></div>
           </div>
           <div class="w-full flex gap-2">
-            <button class="btn btn-outline btn-primary" onclick="delete_modal.showModal()">
+            <button
+              class="btn btn-outline btn-primary"
+              onclick="edit_modal.showModal()"
+              @click="currentProgram = program"
+            >
               Edit
             </button>
-            <button class="btn btn-outline btn-error">Delete</button>
+            <button
+              class="btn btn-outline btn-error"
+              @click="deleteId = program.id"
+              onclick="delete_modal.showModal()"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -153,10 +203,20 @@ const displayTimeframe = (start: Date, end: Date) => {
             </p>
           </div>
           <div class="w-full flex gap-2">
-            <button class="btn btn-outline btn-primary" onclick="delete_modal.showModal()">
+            <button
+              class="btn btn-outline btn-primary"
+              @click="currentProgram = program"
+              onclick="edit_modal.showModal()"
+            >
               Edit
             </button>
-            <button class="btn btn-outline btn-error">Delete</button>
+            <button
+              class="btn btn-outline btn-error"
+              @click="deleteId = program.id"
+              onclick="delete_modal.showModal()"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -167,11 +227,88 @@ const displayTimeframe = (start: Date, end: Date) => {
     <Modal id="delete_modal" title="Are you sure you want to delete">
       <div class="flex gap-4 justify-center">
         <button class="btn btn-neutral btn-sm mb-3" onclick="delete_modal.close()">Close</button>
-        <Button class="btn btn-error btn-sm mb-3"> Delete </Button>
+        <Button
+          class="btn btn-error btn-sm mb-3"
+          :loading="deleting"
+          @click="deleteProgram(deleteId)"
+        >
+          Delete
+        </Button>
       </div>
+      <button id="close_delete" onclick="delete_modal.close()"></button>
     </Modal>
 
-    <!-- Edit Confirmation modal  -->
-    <Modal id="edit_modal" title="Edit program"> </Modal>
+    <!-- Edit Form modal  -->
+    <Modal id="edit_modal" title="Edit program">
+      <form class="card-body mx-auto p-1 sm:p-4" @submit.prevent="handleSubmit">
+        <div class="form-control gap-4">
+          <input
+            type="text"
+            class="input input-bordered"
+            placeholder="Theme"
+            required
+            name="theme"
+            v-model="program.theme"
+          />
+
+          <label class="input input-bordered flex items-center gap-2">
+            Start time
+            <input
+              name="startTime"
+              type="datetime-local"
+              class="grow"
+              required
+              v-model="program.startTime"
+            />
+          </label>
+
+          <label class="input input-bordered flex items-center gap-2">
+            End time
+            <input
+              name="endTime"
+              type="datetime-local"
+              class="grow"
+              required
+              v-model="program.endTime"
+            />
+          </label>
+
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="label-text">Add new picture for program banner</span>
+            </div>
+            <input
+              type="file"
+              name="banner"
+              class="file-input file-input-bordered w-full"
+              required
+            />
+          </label>
+
+          <label class="form-control w-full">
+            <div class="label">
+              <span class="label-text">Choose RCN center or enter venue address below</span>
+            </div>
+            <select v-model="program.venue" class="select select-bordered w-full">
+              <option disabled selected>RCN Global</option>
+              <option v-for="location in locations" :value="location.address">
+                {{ `${location.state}, ${location.country}` }}
+              </option>
+            </select>
+          </label>
+
+          <input name="venue" placeholder="Venue" class="input input-bordered w-full" required />
+
+          <textarea
+            class="textarea textarea-bordered h-24"
+            placeholder="Additional information"
+            name="additionalInfo"
+          ></textarea>
+        </div>
+        <div class="form-control mt-4">
+          <Button :loading="isPending" class="btn btn-primary">Save</Button>
+        </div>
+      </form>
+    </Modal>
   </div>
 </template>

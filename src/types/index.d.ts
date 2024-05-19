@@ -44,11 +44,13 @@ export interface Login {
 }
 
 export interface Program {
+  id: string
   theme: string
   type: 'PROGRAM' | 'EVENT'
   startTime: Date
   endTime: Date
   banner: { secure_url: string }
+  venue: string
   additionalInfo: string
   location: Pick<Location, 'country' | 'state'>
 }

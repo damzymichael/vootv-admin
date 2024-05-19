@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch } from 'vue'
 import Button from '@/components/Button.vue'
 import Modal from '@/components/Modal.vue'
 import { useAudioQuery, useDeleteAudio } from '@/utils/request'
@@ -84,8 +83,8 @@ function formatTime(minutes: number) {
                   </tr>
                 </tbody>
               </table>
-              <p v-else>No streams yet</p>
-              <button class="btn btn-primary btn-sm mb-2 ml-2">View more</button>
+              <p v-else>No streams for this audio</p>
+              <!-- <button class="btn btn-primary btn-sm mb-2 ml-2">View more</button> -->
             </div>
           </div>
           <!-- Downloads  -->
@@ -112,9 +111,8 @@ function formatTime(minutes: number) {
                   </tr>
                 </tbody>
               </table>
-              <p v-else>No streams yet</p>
-
-              <button class="btn btn-primary btn-sm mb-2 ml-2">View more</button>
+              <p v-else>No downloads for this audio</p>
+              <!-- <button class="btn btn-primary btn-sm mb-2 ml-2">View more</button> -->
             </div>
           </div>
         </section>

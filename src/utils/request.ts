@@ -260,8 +260,17 @@ export function usePrograms() {
 }
 
 export function useDeleteProgram() {
+  const queryClient = useQueryClient()
   const errorHandler = useError()
+  const $toast = useToast()
 
-  return useMutation({})
+  return useMutation<AxiosResponse<string>, AxiosError<string>, string>({
+    mutationFn: (id) => instance.delete('/program/' + id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['programs'] })
+      $toast.success(data.data, { timeout: 4000 })
+    },
+    onError: (error) => errorHandler(error)
+  })
 }
 //* Programs request
