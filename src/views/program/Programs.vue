@@ -58,7 +58,6 @@ const deleteProgram = async (id: string) => {
 }
 
 // @change="locationId = locations?.find((location) => location.address == program.venue)?.id as string"
-
 </script>
 
 <template>
@@ -289,7 +288,7 @@ const deleteProgram = async (id: string) => {
             <div class="label">
               <span class="label-text">Choose RCN center or enter venue address below</span>
             </div>
-            <select v-model="program.venue" class="select select-bordered w-full">
+            <select v-model="program.venue" class="select select-bordered w-full" @change="">
               <option disabled selected>RCN Global</option>
               <option v-for="location in locations" :value="location.address">
                 {{ `${location.state}, ${location.country}` }}
@@ -297,7 +296,13 @@ const deleteProgram = async (id: string) => {
             </select>
           </label>
 
-          <input name="venue" placeholder="Venue" class="input input-bordered w-full" required />
+          <input
+            name="venue"
+            placeholder="Venue"
+            class="input input-bordered w-full"
+            required
+            v-model="program.venue"
+          />
 
           <textarea
             class="textarea textarea-bordered h-24"
