@@ -6,8 +6,10 @@ import { usePrograms } from '@/utils/request'
 import { formatDay, formatDate } from '@/utils/UI'
 import Modal from '@/components/Modal.vue'
 import Button from '@/components/Button.vue'
+import LocationIcon from '@/components/svgs/LocationIcon.vue'
+import CloseIcon from '@/components/svgs/CloseIcon.vue'
 import { ref, reactive, watch } from 'vue'
-import { useDeleteProgram, useLocations } from '@/utils/request'
+import { useDeleteProgram, useLocations, useUpdateProgram } from '@/utils/request'
 import type { Program } from '@/types'
 
 const router = useRouter()
@@ -20,6 +22,8 @@ const deleteId = ref<string>('')
 
 const { mutateAsync, isPending: deleting } = useDeleteProgram()
 
+const { mutateAsync: update, isPending: updating } = useUpdateProgram()
+
 const currentProgram = ref<Program | undefined>(undefined)
 
 const program = reactive({
@@ -27,19 +31,30 @@ const program = reactive({
   startTime: new Date().toISOString().slice(0, 16),
   endTime: new Date().toISOString().slice(0, 16),
   venue: '',
-  additionalInfo: ''
+  additionalInfo: '',
+  locationId: ''
 })
 
-watch(currentProgram, () => {
-  if (currentProgram.value) {
-    const { theme, startTime, endTime, additionalInfo, venue } = currentProgram.value
-    program.theme = theme
-    program.startTime = new Date(startTime).toISOString().slice(0, 16)
-    program.endTime = new Date(endTime).toISOString().slice(0, 16)
-    program.additionalInfo = additionalInfo
-    program.venue = venue
+const handleSubmit = async (e: Event) => {
+  const form = e.currentTarget as HTMLFormElement
+  const formData = new FormData(form)
+  for (const [key, value] of formData.entries()) {
+    const trimmedValue = value.toString().trim()
+    if (typeof value != 'object') formData.set(key, trimmedValue)
   }
-})
+  if (currentProgram.value) {
+    const { id } = currentProgram.value
+    formData.append('locationId', program.locationId)
+    await update({ id, formData })
+  }
+  form.reset()
+  document.getElementById('close_edit_modal')?.click()
+}
+
+const deleteProgram = async (id: string) => {
+  await mutateAsync(id)
+  document.getElementById('close_delete')?.click()
+}
 
 const displayTimeframe = (start: Date, end: Date) => {
   const startDate = new Date(start)
@@ -50,14 +65,17 @@ const displayTimeframe = (start: Date, end: Date) => {
     : `${formatDate(startDate)} - ${formatDate(endDate)}`
 }
 
-const handleSubmit = async () => {}
-
-const deleteProgram = async (id: string) => {
-  await mutateAsync(id)
-  document.getElementById('close_delete')?.click()
-}
-
-// @change="locationId = locations?.find((location) => location.address == program.venue)?.id as string"
+watch(currentProgram, () => {
+  if (currentProgram.value) {
+    const { theme, startTime, endTime, additionalInfo, venue, locationId } = currentProgram.value
+    program.theme = theme
+    program.startTime = new Date(startTime).toISOString().slice(0, 16)
+    program.endTime = new Date(endTime).toISOString().slice(0, 16)
+    program.additionalInfo = additionalInfo
+    program.venue = venue
+    program.locationId = locationId
+  }
+})
 </script>
 
 <template>
@@ -88,9 +106,7 @@ const deleteProgram = async (id: string) => {
           class="flex flex-wrap items-start gap-2 mb-4"
           v-for="program in data?.filter(
             (program) =>
-              program.type == 'PROGRAM' &&
-              new Date(program.startTime) < new Date() &&
-              new Date(program.endTime) > new Date()
+              new Date(program.startTime) < new Date() && new Date(program.endTime) > new Date()
           )"
         >
           <img
@@ -105,6 +121,10 @@ const deleteProgram = async (id: string) => {
               <CalenderIcon />
               <span>Ends: {{ new Date(program.endTime).toDateString() }}</span>
             </div>
+            <p class="flex items-center gap-2" v-show="program.type == 'EVENT'">
+              <LocationIcon :width="20" :height="20" class="w-5" />
+              <span> RCN {{ program.location.state }}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -172,32 +192,7 @@ const deleteProgram = async (id: string) => {
             </div>
             <div class="flex gap-2 items-center"><TimeIcon /> <span>8AM & 4PM</span></div>
             <p class="flex items-center gap-2">
-              <svg
-                width="20px"
-                height="20px"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    d="M12 21C15.5 17.4 19 14.1764 19 10.2C19 6.22355 15.866 3 12 3C8.13401 3 5 6.22355 5 10.2C5 14.1764 8.5 17.4 12 21Z"
-                    class="stroke-current"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                  <path
-                    d="M12 12C13.1046 12 14 11.1046 14 10C14 8.89543 13.1046 8 12 8C10.8954 8 10 8.89543 10 10C10 11.1046 10.8954 12 12 12Z"
-                    class="stroke-current"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </g>
-              </svg>
+              <LocationIcon :width="20" :height="20" class="w-5" />
               <span> RCN {{ program.location.state }}</span>
             </p>
           </div>
@@ -239,6 +234,9 @@ const deleteProgram = async (id: string) => {
 
     <!-- Edit Form modal  -->
     <Modal id="edit_modal" title="Edit program">
+      <button id="close_edit_modal" onclick="edit_modal.close()" class="absolute top-4 right-4">
+        <CloseIcon :width="25" :height="25" />
+      </button>
       <form class="card-body mx-auto p-1 sm:p-4" @submit.prevent="handleSubmit">
         <div class="form-control gap-4">
           <input
@@ -280,7 +278,7 @@ const deleteProgram = async (id: string) => {
               type="file"
               name="banner"
               class="file-input file-input-bordered w-full"
-              required
+              accept="image/*"
             />
           </label>
 
@@ -288,7 +286,15 @@ const deleteProgram = async (id: string) => {
             <div class="label">
               <span class="label-text">Choose RCN center or enter venue address below</span>
             </div>
-            <select v-model="program.venue" class="select select-bordered w-full" @change="">
+            <select
+              v-model="program.venue"
+              class="select select-bordered w-full"
+              @change="
+                program.locationId = locations?.find(
+                  (location) => location.address == program.venue
+                )?.id as string
+              "
+            >
               <option disabled selected>RCN Global</option>
               <option v-for="location in locations" :value="location.address">
                 {{ `${location.state}, ${location.country}` }}
@@ -308,10 +314,11 @@ const deleteProgram = async (id: string) => {
             class="textarea textarea-bordered h-24"
             placeholder="Additional information"
             name="additionalInfo"
+            v-model="program.additionalInfo"
           ></textarea>
         </div>
         <div class="form-control mt-4">
-          <Button :loading="isPending" class="btn btn-primary">Save</Button>
+          <Button :loading="updating" class="btn btn-primary">Save</Button>
         </div>
       </form>
     </Modal>

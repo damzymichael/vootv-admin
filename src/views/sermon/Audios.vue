@@ -96,12 +96,11 @@ const handleSubmit = async (e: Event) => {
         />
         <input type="text" placeholder="Title" class="input input-bordered" required name="title" />
         <input type="file" class="file-input input-bordered" accept=".mp3,audio/*" name="audio" />
-        <input
-          type="datetime-local"
-          class="input input-bordered"
-          v-model="dateValue"
-          name="timeRecorded"
-        />
+
+        <label class="input input-bordered flex items-center gap-2">
+          Time Recorded
+          <input type="datetime-local" class="grow" v-model="dateValue" name="timeRecorded" />
+        </label>
       </div>
       <div class="form-control mt-4">
         <Button class="btn btn-primary" :loading="uploading">Upload</Button>

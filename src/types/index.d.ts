@@ -52,5 +52,6 @@ export interface Program {
   banner: { secure_url: string }
   venue: string
   additionalInfo: string
+  locationId: string
   location: Pick<Location, 'country' | 'state'>
 }

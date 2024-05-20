@@ -47,7 +47,7 @@ export function useLogin() {
   return useMutation<AxiosResponse<string>, AxiosError<string>, Login>({
     mutationFn: (data) => instance.post('/user/login?admin=true', data),
     onSuccess: (data) => {
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
       router.replace('/overview')
     },
     onError: (error) => $toast.error(error.response?.data as string)
@@ -62,7 +62,7 @@ export function useLogout() {
   return useMutation<AxiosResponse<string>, AxiosError<string>>({
     mutationFn: () => instance.post('/user/logout'),
     onSuccess: (data) => {
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
       queryClient.clear()
       router.replace('/')
     },
@@ -106,7 +106,7 @@ export const useAddAudio = () => {
   return useMutation<AxiosResponse<string>, AxiosError<string>, FormData>({
     mutationFn: (formData) => instance.post('/audio', formData),
     onSuccess: (data) => {
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
       queryClient.invalidateQueries({ queryKey: ['audios'] })
     },
     onError: (error) => errorHandler(error)
@@ -145,7 +145,7 @@ export function useDeleteAudio(id: string) {
     mutationFn: () => instance.delete('/audio/' + id),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['audios'] })
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
       router.push({ path: '/sermon', replace: true })
     },
     onError: (error) => errorHandler(error)
@@ -164,7 +164,7 @@ export function useAddLocation() {
     mutationFn: (location) => instance.post('/location', location),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['locations'] })
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
     },
     onError: (error) => errorHandler(error)
   })
@@ -205,7 +205,7 @@ export function useUpdateLocation(id: string) {
     mutationFn: (data) => instance.patch('/location/' + id, data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['locations', id] })
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
     },
     onError: (error) => errorHandler(error)
   })
@@ -223,7 +223,7 @@ export function useAddService(id: string) {
     mutationFn: (data) => instance.post('/service/' + id, data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['locations', id] })
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
     },
     onError: (error) => errorHandler(error)
   })
@@ -241,7 +241,7 @@ export function useAddProgram() {
     mutationFn: (formData) => instance.post('/program', formData),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['programs'] })
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
       router.replace('/programs')
     },
     onError: (error) => errorHandler(error)
@@ -269,7 +269,24 @@ export function useDeleteProgram() {
     mutationFn: (id) => instance.delete('/program/' + id),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['programs'] })
-      $toast.success(data.data, { timeout: 4000 })
+      $toast.success(data.data, { timeout: 3000 })
+    },
+    onError: (error) => errorHandler(error)
+  })
+}
+
+type Params = { id: string; formData: FormData }
+
+export function useUpdateProgram() {
+  const queryClient = useQueryClient()
+  const errorHandler = useError()
+  const $toast = useToast()
+
+  return useMutation<AxiosResponse<string>, AxiosError<string>, Params>({
+    mutationFn: ({ id, formData }) => instance.patch('/program/' + id, formData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['programs'] })
+      $toast.success(data.data, { timeout: 3000 })
     },
     onError: (error) => errorHandler(error)
   })

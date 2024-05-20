@@ -71,7 +71,13 @@ const handleSubmit = async (e: Event) => {
           <div class="label">
             <span class="label-text">Add picture for program banner</span>
           </div>
-          <input type="file" name="banner" class="file-input file-input-bordered w-full" required />
+          <input
+            type="file"
+            name="banner"
+            class="file-input file-input-bordered w-full"
+            required
+            accept="image/*"
+          />
         </label>
 
         <label class="form-control w-full">
