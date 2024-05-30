@@ -10,6 +10,7 @@ const { data, isPending, error } = useUsers()
 <template>
   <div class="user">
     <h1 class="text-2xl mb-4 font-semibold">Users</h1>
+    <!-- <progress class="progress progress-secondary w-full" @value="loading" max="100"></progress> -->
     <section class="overflow-x-auto">
       <div v-if="isPending" class="flex gap-3 flex-col items-center justify-center h-32">
         <span class="loading loading-ring loading-lg"></span>

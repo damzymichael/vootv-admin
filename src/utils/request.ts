@@ -1,9 +1,26 @@
+import { ref } from 'vue'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import axios from 'axios'
 import type { AxiosError, AxiosResponse } from 'axios'
 import type { Audio, User, Location, Service, Login, Program } from '@/types'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
+
+// export function useAxios() {
+//   const loading = ref(0)
+//   const instance = axios.create({
+//     baseURL: import.meta.env.VITE_API_URL,
+//     withCredentials: true,
+//     onDownloadProgress: (event) => {
+//       const percentCompleted = event.total ? Math.round((event.loaded * 100) / event.total) : 0
+//       console.log(percentCompleted)
+//       loading.value = percentCompleted
+//     },
+//     headers: { 'Access-Control-Allow-Orign': '*' }
+//   })
+
+//   return { instance, loading }
+// }
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -29,6 +46,7 @@ const useError = () => {
 //* User requests
 export function useUsers() {
   const errorHandler = useError()
+  // const { instance } = useAxios()
 
   return useQuery<User[]>({
     queryKey: ['users'],
@@ -43,6 +61,7 @@ export function useUsers() {
 export function useLogin() {
   const $toast = useToast()
   const router = useRouter()
+  // const { instance } = useAxios()
 
   return useMutation<AxiosResponse<string>, AxiosError<string>, Login>({
     mutationFn: (data) => instance.post('/user/login?admin=true', data),
@@ -58,6 +77,7 @@ export function useLogout() {
   const $toast = useToast()
   const router = useRouter()
   const queryClient = useQueryClient()
+  // const { instance } = useAxios()
 
   return useMutation<AxiosResponse<string>, AxiosError<string>>({
     mutationFn: () => instance.post('/user/logout'),
@@ -72,6 +92,7 @@ export function useLogout() {
 
 export function useUser(id: string) {
   const errorHandler = useError()
+  // const { instance } = useAxios()
 
   return useQuery<User>({
     queryKey: ['users', id],
@@ -87,6 +108,7 @@ export function useUser(id: string) {
 //* Audio Requests
 export function useAudiosQuery() {
   const errorHandler = useError()
+  // const { instance } = useAxios()
 
   return useQuery<Audio[]>({
     queryKey: ['audios'],
@@ -102,6 +124,7 @@ export const useAddAudio = () => {
   const queryClient = useQueryClient()
   const $toast = useToast()
   const errorHandler = useError()
+  // const { instance } = useAxios()
 
   return useMutation<AxiosResponse<string>, AxiosError<string>, FormData>({
     mutationFn: (formData) => instance.post('/audio', formData),
@@ -123,6 +146,7 @@ type Download = { id: string; user: { fullName: string }; createdAt: Date; statu
 
 export function useAudioQuery(id: string) {
   const errorHandler = useError()
+  // const { instance } = useAxios()
 
   return useQuery<Audio<Stream, Download>>({
     queryKey: ['audios', id],
@@ -135,6 +159,8 @@ export function useAudioQuery(id: string) {
 }
 
 export function useDeleteAudio(id: string) {
+  // const { instance } = useAxios()
+
   const queryClient = useQueryClient()
   const $toast = useToast()
   const router = useRouter()
@@ -156,6 +182,8 @@ export function useDeleteAudio(id: string) {
 //* Location requests
 type LocationBody = Omit<Location, 'id'>
 export function useAddLocation() {
+  // const { instance } = useAxios()
+
   const $toast = useToast()
   const queryClient = useQueryClient()
   const errorHandler = useError()
@@ -171,6 +199,8 @@ export function useAddLocation() {
 }
 
 export function useLocations() {
+  // const { instance } = useAxios()
+
   const errorHandler = useError()
   return useQuery<Location[]>({
     queryKey: ['locations'],
@@ -183,6 +213,8 @@ export function useLocations() {
 }
 
 export function useLocation(id: string) {
+  // const { instance } = useAxios()
+
   const errorHandler = useError()
 
   return useQuery<Location>({
@@ -197,6 +229,8 @@ export function useLocation(id: string) {
 
 type Address = Omit<Location, 'id' | 'pastorInCharge'>
 export function useUpdateLocation(id: string) {
+  // const { instance } = useAxios()
+
   const $toast = useToast()
   const queryClient = useQueryClient()
   const errorHandler = useError()
@@ -215,6 +249,8 @@ export function useUpdateLocation(id: string) {
 //*Service requests
 type ServiceBody = Omit<Service, 'time'>
 export function useAddService(id: string) {
+  // const { instance } = useAxios()
+
   const $toast = useToast()
   const queryClient = useQueryClient()
   const errorHandler = useError()
@@ -232,6 +268,8 @@ export function useAddService(id: string) {
 
 //* Programs request
 export function useAddProgram() {
+  // const { instance } = useAxios()
+
   const router = useRouter()
   const queryClient = useQueryClient()
   const errorHandler = useError()
@@ -249,6 +287,8 @@ export function useAddProgram() {
 }
 
 export function usePrograms() {
+  // const { instance } = useAxios()
+
   const errorHandler = useError()
   return useQuery<Program[]>({
     queryKey: ['programs'],
@@ -261,6 +301,7 @@ export function usePrograms() {
 }
 
 export function useDeleteProgram() {
+  // const { instance } = useAxios()
   const queryClient = useQueryClient()
   const errorHandler = useError()
   const $toast = useToast()
@@ -278,6 +319,7 @@ export function useDeleteProgram() {
 type Params = { id: string; formData: FormData }
 
 export function useUpdateProgram() {
+  // const { instance } = useAxios()
   const queryClient = useQueryClient()
   const errorHandler = useError()
   const $toast = useToast()
